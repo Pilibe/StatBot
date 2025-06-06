@@ -120,4 +120,11 @@ async def k(ctx, url: str):
 
     await ctx.send("```\n" + "\n".join(lines) + "\n```")
 
-bot.run("MTM4MDU4MDMzNTYwNzA4NzI3NQ.GJH2T-.Ez4Qy4LoWfr05TxXDYh0WXi88OrcWmlAi_PWFs")
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
+
+bot.run(TOKEN)
+

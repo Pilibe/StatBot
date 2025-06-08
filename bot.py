@@ -161,10 +161,10 @@ async def dev_ranking(ctx, url: str):
     )
 
     top_n = 20
-    ranking_message = Top {top_n} Countries by Dev Clicks**\n\n"
+    ranking_message = Top {top_n} Countries by "Dev Clicks"**\n\n"
     for rank, (tag, stats) in enumerate(sorted_data[:top_n], start=1):
         dev = float(stats[0].get("dev_total", 0))
-        ranking_message += f"{rank}. {tag} — {dev:.0f} development\n"
+        ranking_message += f"{rank}. {tag} — {dev:.0f} "Dev Clicks"\n"
 
     await ctx.send(ranking_message)
 

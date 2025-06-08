@@ -120,7 +120,7 @@ async def k(ctx, url: str):
 
     await ctx.send("```\n" + "\n".join(lines) + "\n```")
 @bot.command(name='devranking')
-async def dev_ranking(ctx):
+async def dc(ctx):
     # Sort the data by dev_total in descending order
     sorted_data = sorted(data.items(), key=lambda x: x[1].get("dev_total", 0), reverse=True)
 

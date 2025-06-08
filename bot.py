@@ -157,14 +157,14 @@ async def dev_ranking(ctx, url: str):
     # Sort countries by dev_total descending
     sorted_data = sorted(
         data.items(),
-        key=lambda x: x[1].get("dev_total", 0),
+        key=lambda x: x[1][0].get("dev_total", 0),
         reverse=True
     )
 
     # Format the ranking
     ranking_message = "**📈 Development Ranking (by dev_total)**\n\n"
     for rank, (tag, stats) in enumerate(sorted_data, start=1):
-        dev = stats.get("dev_total", 0)
+        dev = stats[0].get("dev_total", 0)
         ranking_message += f"{rank}. {tag} — {dev:.0f} development\n"
 
     await ctx.send(ranking_message)

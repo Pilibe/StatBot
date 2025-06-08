@@ -160,6 +160,12 @@ async def dev_ranking(ctx, url: str):
     key=lambda x: float(x[1][0].get("dev_total", 0)),
     reverse=True
     )
+    # Limit to top 25
+    top_n = 20
+    ranking_message = f"**📈 Top {top_n} Countries by Development**\n\n"
+    for rank, (tag, stats) in enumerate(sorted_data[:top_n], start=1):
+        dev = float(stats[0].get("dev_total", 0))
+        ranking_message += f"{rank}. {tag} — {dev:.0f} development\n"
 
     # Format the ranking
     ranking_message = "**📈 Development Ranking (by dev_total)**\n\n"

@@ -120,17 +120,55 @@ async def k(ctx, url: str):
 
     await ctx.send("```\n" + "\n".join(lines) + "\n```")
 @bot.command(name='dc')
-async def dc(ctx):
-    # Sort the data by dev_total in descending order
-    sorted_data = sorted(data.items(), key=lambda x: x[1].get("dev_total", 0), reverse=True)
+async def dev_ranking(ctx, url: str):
+    await ctx.send("📊 Fetching development data...")
 
-    # Create the ranking message
-    ranking_message = "**🏆 Developer Ranking (by dev_total)**\n\n"
-    for rank, (user_id, stats) in enumerate(sorted_data, start=1):
-        dev_total = stats.get("dev_total", 0)
-        ranking_message += f"{rank}. <@{user_id}> — {dev_total} dev points\n"
+    try:
+        parsed = urllib.parse.urlparse(url)
+        query = urllib.parse.parse_qs(parsed.query)
+        save_id = query["id"][0] if "id" in query else parsed.path.split("/")[-1]
+    except Exception:
+        await ctx.send("❌ Invalid URL format.")
+        return
+
+    # Requesting dev_total only
+    params = {
+        "key": API_KEY,
+        "scope": "getCountryData",
+        "save": save_id,
+        "value": "dev_total",
+        "format": "json"
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(BASE_URL, params=params) as resp:
+            text = await resp.text()
+            try:
+                data = json.loads(text)
+            except Exception as e:
+                print(f"Error parsing JSON:\n{text}\nException: {e}")
+                await ctx.send(f"❌ Failed to parse JSON: `{e}`")
+                return
+
+    if not isinstance(data, dict) or not data:
+        await ctx.send("⚠️ No development data found.")
+        return
+
+    # Sort countries by dev_total descending
+    sorted_data = sorted(
+        data.items(),
+        key=lambda x: x[1].get("dev_total", 0),
+        reverse=True
+    )
+
+    # Format the ranking
+    ranking_message = "**📈 Development Ranking (by dev_total)**\n\n"
+    for rank, (tag, stats) in enumerate(sorted_data, start=1):
+        dev = stats.get("dev_total", 0)
+        ranking_message += f"{rank}. {tag} — {dev:.0f} development\n"
 
     await ctx.send(ranking_message)
+
 
 import os
 TOKEN = os.getenv("DISCORD_TOKEN")

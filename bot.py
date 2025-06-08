@@ -160,13 +160,13 @@ async def dev_ranking(ctx, url: str):
         reverse=True
     )
 
-    top_n = 20
-    ranking_message = Top {top_n} Countries by "Dev Clicks"**\n\n"
-    for rank, (tag, stats) in enumerate(sorted_data[:top_n], start=1):
-        dev = float(stats[0].get("dev_total", 0))
-        ranking_message += f"{rank}. {tag} — {dev:.0f} "Dev Clicks"\n"
+    # Sort and send results
+    sorted_data.sort(key=lambda x: x[1], reverse=True)
+    lines = ["Kocur Score (Eco + Mil)\n"]
+    for rank, (tag, total, eco, mil) in enumerate(scores[:20], 1):
+        lines.append(f"{rank:2}. {tag} – {total:.2f} pts (Eco: {eco:.2f}, Mil: {mil:.2f})")
 
-    await ctx.send(ranking_message)
+    await ctx.send("```\n" + "\n".join(lines) + "\n```")
 
 
 

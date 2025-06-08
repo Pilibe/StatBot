@@ -119,6 +119,7 @@ async def k(ctx, url: str):
         lines.append(f"{rank:2}. {tag} – {total:.2f} pts (Eco: {eco:.2f}, Mil: {mil:.2f})")
 
     await ctx.send("```\n" + "\n".join(lines) + "\n```")
+
 @bot.command(name='dc')
 async def dev_ranking(ctx, url: str):
     await ctx.send("📊 Fetching development data...")
@@ -131,7 +132,6 @@ async def dev_ranking(ctx, url: str):
         await ctx.send("❌ Invalid URL format.")
         return
 
-    # Requesting dev_total only
     params = {
         "key": API_KEY,
         "scope": "getCountryData",
@@ -154,26 +154,20 @@ async def dev_ranking(ctx, url: str):
         await ctx.send("⚠️ No development data found.")
         return
 
-    # Sort countries by dev_total descending
     sorted_data = sorted(
-    data.items(),
-    key=lambda x: float(x[1][0].get("dev_total", 0)),
-    reverse=True
+        data.items(),
+        key=lambda x: float(x[1][0].get("dev_total", 0)),
+        reverse=True
     )
-    # Limit to top 25
+
     top_n = 20
     ranking_message = f"**📈 Top {top_n} Countries by Development**\n\n"
     for rank, (tag, stats) in enumerate(sorted_data[:top_n], start=1):
         dev = float(stats[0].get("dev_total", 0))
         ranking_message += f"{rank}. {tag} — {dev:.0f} development\n"
 
-    # Format the ranking
-    ranking_message = "**📈 Development Ranking (by dev_total)**\n\n"
-    for rank, (tag, stats) in enumerate(sorted_data, start=1):
-        dev = float(stats[0].get("dev_total", 0))
-        ranking_message += f"{rank}. {tag} — {dev:.0f} development\n"
-
     await ctx.send(ranking_message)
+
 
 
 

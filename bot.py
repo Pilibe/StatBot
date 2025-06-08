@@ -119,6 +119,18 @@ async def k(ctx, url: str):
         lines.append(f"{rank:2}. {tag} – {total:.2f} pts (Eco: {eco:.2f}, Mil: {mil:.2f})")
 
     await ctx.send("```\n" + "\n".join(lines) + "\n```")
+@bot.command(name='devranking')
+async def dev_ranking(ctx):
+    # Sort the data by dev_total in descending order
+    sorted_data = sorted(data.items(), key=lambda x: x[1].get("dev_total", 0), reverse=True)
+
+    # Create the ranking message
+    ranking_message = "**🏆 Developer Ranking (by dev_total)**\n\n"
+    for rank, (user_id, stats) in enumerate(sorted_data, start=1):
+        dev_total = stats.get("dev_total", 0)
+        ranking_message += f"{rank}. <@{user_id}> — {dev_total} dev points\n"
+
+    await ctx.send(ranking_message)
 
 import os
 TOKEN = os.getenv("DISCORD_TOKEN")

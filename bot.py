@@ -119,7 +119,7 @@ async def k(ctx, url: str):
         lines.append(f"{rank:2}. {tag} – {total:.2f} pts (Eco: {eco:.2f}, Mil: {mil:.2f})")
 
     await ctx.send("```\n" + "\n".join(lines) + "\n```")
-@bot.command(name='devranking')
+@bot.command(name='dc')
 async def dc(ctx):
     # Sort the data by dev_total in descending order
     sorted_data = sorted(data.items(), key=lambda x: x[1].get("dev_total", 0), reverse=True)
